@@ -21,12 +21,8 @@ export const EditableRadioGroup = memo(({ componentId }) => {
 
   const handleChangeOptionText = useCallback(
     (newOption) => {
-      const newOptions = JSON.parse(JSON.stringify(stateOptions));
-      // value это индекс опции
-      const { value: index, label } = newOption;
-      newOptions[index].label = label;
-
-      dispatch(configActions.setProps({ path: `${componentId}.options`, value: newOptions }))
+      const { index, label } = newOption;
+      dispatch(configActions.setProps({ path: `${componentId}.options[${index}].label`, value: label }))
     },
     [stateOptions, componentId]
   );

@@ -45,6 +45,7 @@ export const RadioGroup = memo(({
             label,
             name: rName,
             value: index,
+            index,
             onChange: handleChange,
             checked: (checkedValue === index),
             ...props
@@ -52,6 +53,7 @@ export const RadioGroup = memo(({
         : (
           <Radio
             key={value}
+            index={index}
             label={label}
             name={rName}
             value={index}

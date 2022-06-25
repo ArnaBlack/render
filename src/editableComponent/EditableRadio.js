@@ -3,9 +3,9 @@ import { Radio } from "../lib/Radio";
 import { useEditableText } from "./useEditableText";
 import { useDidMount } from "../hooks";
 
-export const EditableRadio = memo(({ label, onChangeOptionText, value }) => {
+export const EditableRadio = memo(({ label, onChangeOptionText, index }) => {
   const handleChangeText = (newText) => {
-    onChangeOptionText({ label: newText, value });
+    onChangeOptionText({ label: newText, index });
   };
 
   const { hRef, handleInput, handleBlur } = useEditableText(
