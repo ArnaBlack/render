@@ -1,5 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 
-export const Block = ({ text }) => {
+export const Block = memo(({ text }) => {
   return <i>{text}</i>;
-};
+});
+
+
+Block.displayName = "Block"

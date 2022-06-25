@@ -1,43 +1,45 @@
-import React, { useCallback, useState } from "react";
-import {
-  useBuilderStoreSelector,
-  useSetComponentProps
-} from "../store/builderStore";
+import React, { useCallback, memo, useState, useEffect } from 'react'
 import { RadioGroup } from "../lib/RadioGroup";
 import { EditableRadio } from "./EditableRadio";
 import { RadioWrapper } from "./styles";
+import { useDispatch, useSelector } from 'react-redux'
+import { configSelectors, configActions } from '../store/storeReduxToolkit/reducer'
 
 const generateRadioOption = () => {
   return { label: "Введите текст", value: Date.now() };
 };
 
-export const EditableRadioGroup = ({ componentId }) => {
-  const { options } = useBuilderStoreSelector(componentId);
-  const setComponentProps = useSetComponentProps();
+export const EditableRadioGroup = memo(({ componentId }) => {
+  const dispatch = useDispatch()
+  const component = useSelector(configSelectors.selectComponent)(componentId)
+
+  const [stateOptions, setStateOptions] = useState([])
+
+  useEffect(() => {
+    setStateOptions(component.options)
+  }, [component])
 
   const handleChangeOptionText = useCallback(
     (newOption) => {
-      // const newOptions = JSON.parse(JSON.stringify(options));
-      // console.log("options 1", JSON.stringify(options));
+      const newOptions = JSON.parse(JSON.stringify(stateOptions));
       // value это индекс опции
       const { value: index, label } = newOption;
-      options[index].label = label;
+      newOptions[index].label = label;
 
-      console.log("options 2", JSON.stringify(options));
-      setComponentProps({ path: `${componentId}.options`, value: options });
+      dispatch(configActions.setProps({ path: `${componentId}.options`, value: newOptions }))
     },
-    [options, setComponentProps, componentId]
+    [stateOptions, componentId]
   );
 
   const handleClick = () => {
     const option = generateRadioOption();
-    setComponentProps({
+    dispatch(configActions.setProps({
       path: `${componentId}.options`,
-      value: [...options, option]
-    });
+      value: [...stateOptions, option]
+    }))
   };
 
-  const getComponent = useCallback(
+  const renderComponent = useCallback(
     (props) => (
       <EditableRadio onChangeOptionText={handleChangeOptionText} {...props} />
     ),
@@ -46,10 +48,12 @@ export const EditableRadioGroup = ({ componentId }) => {
 
   return (
     <RadioWrapper>
-      <RadioGroup options={options} Component={getComponent} />
+      <RadioGroup options={stateOptions} renderComponent={renderComponent} />
       <button style={{ marginLeft: "30px" }} onClick={handleClick}>
         add radio
       </button>
     </RadioWrapper>
   );
-};
+});
+
+EditableRadioGroup.displayName = 'EditableRadioGroup'

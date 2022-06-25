@@ -13,18 +13,6 @@ export const EditableRadio = memo(({ label, onChangeOptionText, value }) => {
     handleChangeText
   );
 
-  useEffect(() => {
-    return () => {
-      console.log("unmount useEffect");
-    };
-  }, []);
-
-  // useDidMount(() => {
-  //   return () => {
-  //     console.log("unmount useDidMount");
-  //   };
-  // });
-
   return (
     <Radio
       ref={hRef}

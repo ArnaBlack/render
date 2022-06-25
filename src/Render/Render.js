@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, memo } from "react";
 import { COMPONENTS_MAP_BUILDER, COMPONENTS_MAP_VIEW } from "./constants";
-import { useGetComponent } from "../store/builderStore";
-import isEquial from "lodash.isequal";
+import isEqual from "lodash.isequal";
+import { useSelector } from 'react-redux'
+import { configSelectors } from '../store/storeReduxToolkit/reducer'
 
-export const Render = ({ id, isEdit }) => {
+export const Render = memo(({ id, isEdit }) => {
   const [component, setComponent] = useState({});
-  const getComponent = useGetComponent();
+  const getComponent = useSelector(configSelectors.selectComponent)
 
   const { name, children, ...props } = component;
 
@@ -16,7 +17,7 @@ export const Render = ({ id, isEdit }) => {
   useEffect(() => {
     const newProps = getComponent(id) || {};
 
-    if (!isEquial(newProps, component)) {
+    if (!isEqual(newProps, component)) {
       setComponent(getComponent(id) || {});
     }
   }, [id, getComponent, component]);
@@ -33,4 +34,6 @@ export const Render = ({ id, isEdit }) => {
     return React.createElement(componentMap[name], { ...props, key: id });
 
   return null;
-};
+});
+
+Render.displayName = 'Render'

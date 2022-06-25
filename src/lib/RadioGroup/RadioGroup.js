@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Radio } from "../Radio";
 import { Container } from "./styles";
 
 const rndName = Date.now();
 
-export const RadioGroup = ({
-  options,
+export const RadioGroup = memo(({
+  options = [],
   value,
   onChange,
   onChangeValue,
-  Component,
+  renderComponent,
   className,
   ...props
 }) => {
@@ -39,17 +39,17 @@ export const RadioGroup = ({
   return (
     <Container className={className}>
       {options.map(({ label, value }, index) =>
-        Component ? (
-          <Component
-            key={value}
-            label={label}
-            name={rName}
-            value={index}
-            onChange={handleChange}
-            checked={checkedValue === index}
-            {...props}
-          />
-        ) : (
+        renderComponent ? (
+          renderComponent({
+            key: value,
+            label,
+            name: rName,
+            value: index,
+            onChange: handleChange,
+            checked: (checkedValue === index),
+            ...props
+          }))
+        : (
           <Radio
             key={value}
             label={label}
@@ -63,4 +63,6 @@ export const RadioGroup = ({
       )}
     </Container>
   );
-};
+});
+
+RadioGroup.displayName = 'RadioGroup'

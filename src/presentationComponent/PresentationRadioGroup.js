@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import { RadioGroup } from "../lib/RadioGroup";
 import { useComponentAction } from "../useComponentAction";
 
-export const PresentationRadioGroup = ({ options, actions }) => {
+export const PresentationRadioGroup = memo(({ options, actions }) => {
   const { handleWriteToStore, valueFromStore } = useComponentAction(actions);
 
   const handleChangeValue = useCallback(
@@ -19,4 +19,6 @@ export const PresentationRadioGroup = ({ options, actions }) => {
       onChangeValue={handleChangeValue}
     />
   );
-};
+});
+
+PresentationRadioGroup.displayName = 'PresentationRadioGroup'

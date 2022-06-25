@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { componentsConfig } from "../config";
+import { componentsConfig } from "../../config";
 import set from "lodash.set";
 import deepClone from "lodash.clonedeep";
 import isEquial from "lodash.isequal";
@@ -11,16 +11,10 @@ const useBuilderStoreContext = () => useContext(BuilderStoreContext);
 function BuilderStoreReducer(state, action) {
   switch (action.type) {
     case "setProps": {
-      console.log();
       const { path, value } = action.payload;
       const newState = deepClone(state);
 
-      console.log("newState b", JSON.stringify(newState));
-      console.log("state b", JSON.stringify(state));
-
       set(state, path, value);
-      console.log("newState a", JSON.stringify(newState));
-      console.log("state a", JSON.stringify(state));
 
       if (!isEquial(newState, state)) {
         return newState;
@@ -63,7 +57,6 @@ const useSetComponentProps = () => {
 
   return useCallback(
     ({ path, value }) => {
-      console.log("useSetComponentProps", path);
       dispatch({ type: "setProps", payload: { path, value } });
     },
     [dispatch]
